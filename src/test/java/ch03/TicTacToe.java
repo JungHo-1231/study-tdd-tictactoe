@@ -2,6 +2,7 @@ package ch03;
 
 public class TicTacToe {
 
+    boolean playerTurn = true;
     private Character[][] board = {{'\0', '\0', '\0'},
             {'\0', '\0', '\0'}, {'\0', '\0', '\0'}};
 
@@ -12,6 +13,16 @@ public class TicTacToe {
         checkValue(y, "Y값이 올바르지 않습니다");
         // 올바른 곳에 두었는지 확인
         putBoard(x, y);
+
+        changePlayerTurn();
+    }
+
+    private void changePlayerTurn() {
+        if (playerTurn){
+            playerTurn = false;
+        } else {
+            playerTurn = true;
+        }
     }
 
     private void putBoard(int x, int y) throws Exception {
@@ -25,6 +36,14 @@ public class TicTacToe {
     private void checkValue(int y, String s) throws Exception {
         if (y < 1 || 3 < y) {
             throw new Exception(s);
+        }
+    }
+
+    public char nextPlayer() {
+        if (playerTurn){
+            return 'X';
+        } else {
+            return 'O';
         }
     }
 }
