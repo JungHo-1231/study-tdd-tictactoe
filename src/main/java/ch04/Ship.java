@@ -14,5 +14,6 @@ public class Ship {
 
     public boolean moveForward() {
 //        return location.forward();
+        return false;
     }
 }
