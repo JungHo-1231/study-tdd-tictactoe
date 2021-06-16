@@ -1,19 +1,56 @@
 package ch05;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.StringJoiner;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Connect4TDD {
 
     private static final int ROWS = 6;
     private static final int COLUMNS = 7;
     private static final String EMPTY = " ";
+    private static final String RED = "R";
+    private static final String GREEN = "G";
+    private PrintStream outputChannel;
+    private static final String DELIMITER = "|";
+
+    private String currentPlayer = RED;
 
     private String[][] board = new String[ROWS][COLUMNS];
 
-    public Connect4TDD() {
+    public Connect4TDD(PrintStream out) {
+        outputChannel = out;
         for (String[] row : board) {
             Arrays.fill(row, EMPTY);
+        }
+    }
+
+    public String getCurrentPlayer(){
+        outputChannel.printf("Player %s turn%n", currentPlayer);
+        return currentPlayer;
+    }
+
+    private void printBoard(){
+        for (int row = ROWS - 1; row >= 0; row--) {
+            StringJoiner stringJoiner =
+                    new StringJoiner(DELIMITER,
+                            DELIMITER,
+                            DELIMITER);
+            Stream.of(board[row])
+                    .forEachOrdered(stringJoiner::add);
+            outputChannel
+                    .println(stringJoiner.toString());
+        }
+    }
+
+    private void switchPlayer(){
+        if (RED.equals(currentPlayer)) {
+            currentPlayer = GREEN;
+        } else {
+            currentPlayer = RED;
         }
     }
 
@@ -33,7 +70,9 @@ public class Connect4TDD {
         checkColumn(column);
         int row = getNumberOfDiscsInColumn(column);
         checkPositionToInsert(row, column);
-        board[row][column] = "X";
+        board[row][column] = currentPlayer;
+        printBoard();
+        switchPlayer();
         return row;
     }
 
@@ -47,6 +86,5 @@ public class Connect4TDD {
             throw new RuntimeException("No more room in column " + column);
         }
     }
-
 
 }
